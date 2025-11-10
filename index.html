@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>День Святого Валентина</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #e91e63;
+            --primary-dark: #c2185b;
+            --secondary: #f8bbd9;
+            --accent: #ff4081;
+            --light: #fce4ec;
+            --dark: #880e4f;
+            --text: #333;
+            --white: #fff;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Анимированный фон с сердцами */
+        .hearts-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            transform: rotate(45deg);
+            opacity: 0.3;
+            animation: float 15s infinite linear;
+        }
+        
+        .heart:before, .heart:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+        
+        .heart:after {
+            top: 0;
+            left: -10px;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(45deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Навигация */
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            color: var(--primary);
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: transform 0.3s;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--white);
+            background: var(--primary);
+        }
+        
+        .nav-links a.active {
+            color: var(--white);
+            background: var(--primary);
+        }
+        
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        
+        .burger {
+            display: none;
+            cursor: pointer;
+            z-index: 101;
+        }
+        
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary);
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Страницы */
+        .page {
+            display: none;
+            padding: 40px 0;
+            min-height: 70vh;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        h1, h2, h3 {
+            color: var(--dark);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        h1:after, h2:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            bottom: -10px;
+            left: 0;
+            border-radius: 2px;
+        }
+        
+        h2:after {
+            width: 40px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        /* Главная страница */
+        .hero {
+            text-align: center;
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(233,30,99,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: -1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: var(--text);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            margin-top: 20px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover:before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.6);
+        }
+        
+        /* История */
+        .history-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: center;
+            margin-top: 40px;
+        }
+        
+        .history-text {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .history-text:hover {
+            transform: translateY(-5px);
+        }
+        
+        .history-image {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .history-image .floating-heart {
+            font-size: 150px;
+            color: var(--primary);
+            animation: floatHeart 3s ease-in-out infinite;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+        }
+        
+        @keyframes floatHeart {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Традиции */
+        .traditions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .tradition-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tradition-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            transition: width 0.3s;
+        }
+        
+        .tradition-card:hover:before {
+            width: 100%;
+            opacity: 0.1;
+        }
+        
+        .tradition-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .tradition-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tradition-card h3 i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* Подарки */
+        .gifts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .gift-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .gift-card:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .gift-image {
+            height: 200px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 70px;
+            color: white;
+            transition: all 0.5s ease;
+        }
+        
+        .gift-card:hover .gift-image {
+            transform: scale(1.1);
+        }
+        
+        .gift-content {
+            padding: 20px;
+        }
+        
+        .gift-content h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        /* Идеи */
+        .ideas-list {
+            list-style: none;
+            margin-top: 30px;
+        }
+        
+        .ideas-list li {
+            background: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .ideas-list li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        /* Футер */
+        footer {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+            position: relative;
+        }
+        
+        footer:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: 100% 100%;
+        }
+        
+        .footer-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 0 10px;
+            color: white;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: white;
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        /* Адаптивность */
+        @media screen and (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                right: 0;
+                height: 100vh;
+                top: 0;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 70%;
+                transform: translateX(100%);
+                transition: transform 0.5s ease-in;
+                z-index: 99;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            }
+            
+            .nav-links li {
+                margin: 20px 0;
+                opacity: 0;
+            }
+            
+            .burger {
+                display: block;
+            }
+            
+            .nav-active {
+                transform: translateX(0%);
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .history-content, .traditions-grid, .gifts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @keyframes navLinkFade {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .toggle .line1 {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        
+        .toggle .line2 {
+            opacity: 0;
+        }
+        
+        .toggle .line3 {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        
+        /* Дополнительные анимации */
+        .fade-in {
+            animation: fadeIn 1s ease;
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease;
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.8s ease;
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+    </style>
+</head>
+<body>
+    <!-- Анимированный фон с сердцами -->
+    <div class="hearts-background" id="heartsBackground"></div>
+    
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">❤️ День Святого Валентина</div>
+                <ul class="nav-links">
+                    <li><a href="#" class="nav-link active" data-page="home">Главная</a></li>
+                    <li><a href="#" class="nav-link" data-page="history">История</a></li>
+                    <li><a href="#" class="nav-link" data-page="traditions">Традиции</a></li>
+                    <li><a href="#" class="nav-link" data-page="gifts">Подарки</a></li>
+                    <li><a href="#" class="nav-link" data-page="ideas">Идеи</a></li>
+                </ul>
+                <div class="burger">
+                    <div class="line1"></div>
+                    <div class="line2"></div>
+                    <div class="line3"></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Главная страница -->
+        <section id="home" class="page active">
+            <div class="hero">
+                <h1 class="bounce">День Святого Валентина</h1>
+                <p>Праздник любви, романтики и нежных чувств</p>
+                <p>Откройте для себя историю, традиции и идеи для празднования самого романтичного дня в году</p>
+                <a href="#" class="btn nav-link" data-page="history">Узнать больше</a>
+            </div>
+            
+            <div class="quick-links">
+                <h2>Быстрый доступ</h2>
+                <div class="traditions-grid">
+                    <div class="tradition-card slide-in-left">
+                        <h3><i class="fas fa-book"></i> История праздника</h3>
+                        <p>Узнайте о происхождении Дня Святого Валентина и его развитии на протяжении веков.</p>
+                        <a href="#" class="btn nav-link" data-page="history">Читать</a>
+                    </div>
+                    <div class="tradition-card fade-in">
+                        <h3><i class="fas fa-heart"></i> Традиции</h3>
+                        <p>Откройте для себя различные традиции празднования Дня Святого Валентина по всему миру.</p>
+                        <a href="#" class="btn nav-link" data-page="traditions">Узнать</a>
+                    </div>
+                    <div class="tradition-card slide-in-right">
+                        <h3><i class="fas fa-gift"></i> Идеи подарков</h3>
+                        <p>Найдите вдохновение для выбора идеального подарка для вашей второй половинки.</p>
+                        <a href="#" class="btn nav-link" data-page="gifts">Смотреть</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- История -->
+        <section id="history" class="page">
+            <h1>История Дня Святого Валентина</h1>
+            <div class="history-content">
+                <div class="history-text slide-in-left">
+                    <p>День Святого Валентина, отмечаемый 14 февраля, имеет долгую и интересную историю, уходящую корнями в древнеримские традиции и христианские легенды.</p>
+                    <p>Согласно одной из версий, праздник связан с христианским священником Валентином, который жил в III веке в Риме. В то время император Клавдий II запретил молодым мужчинам жениться, считая, что холостяки лучше служат в армии. Валентин тайно венчал влюбленных, за что был казнен.</p>
+                    <p>Другая легенда гласит, что находясь в тюрьме, Валентин влюбился в дочь тюремщика и перед казнью написал ей письмо, подписанное "Твой Валентин". Эта фраза стала традиционной для валентинок.</p>
+                    <p>В Средние века праздник стал ассоциироваться с романтической любовью, а в XVIII веке в Англии появилась традиция обмена поздравительными открытками - "валентинками".</p>
+                </div>
+                <div class="history-image slide-in-right">
+                    <div class="floating-heart">❤️</div>
+                    <p>Символ любви - сердце</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Традиции -->
+        <section id="traditions" class="page">
+            <h1>Традиции Дня Святого Валентина</h1>
+            <p>В разных странах мира День Святого Валентина отмечают по-разному, но есть и общие традиции, которые объединяют влюбленных по всему миру.</p>
+            
+            <div class="traditions-grid">
+                <div class="tradition-card">
+                    <h3><i class="fas fa-envelope"></i> Валентинки</h3>
+                    <p>Обмен поздравительными открытками в форме сердца - самая популярная традиция. Ежегодно отправляются миллионы валентинок по всему миру.</p>
+                </div>
+                <div class="tradition-card">
+                    <h3><i class="fas fa-rose"></i> Цветы</h3>
+                    <p>Красные розы - символ любви и страсти. В День Святого Валентина продаются миллионы роз, которые дарят любимым.</p>
+                </div>
+                <div class="tradition-card">
+                    <h3><i class="fas fa-candy-cane"></i> Сладости</h3>
+                    <p>Шоколад и конфеты - традиционные подарки в этот день. Особенно популярны шоколадные сердца и конфеты в красивых упаковках.</p>
+                </div>
+                <div class="tradition-card">
+                    <h3><i class="fas fa-utensils"></i> Романтический ужин</h3>
+                    <p>Пары часто устраивают особенный ужин в ресторане или дома при свечах, чтобы провести время вместе.</p>
+                </div>
+                <div class="tradition-card">
+                    <h3><i class="fas fa-gift"></i> Подарки</h3>
+                    <p>Ювелирные изделия, парфюмерия, мягкие игрушки и другие подарки, выражающие любовь и внимание.</p>
+                </div>
+                <div class="tradition-card">
+                    <h3><i class="fas fa-heart-circle-check"></i> Признания в любви</h3>
+                    <p>День Святого Валентина - идеальное время для признаний в любви, предложений руки и сердца.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Подарки -->
+        <section id="gifts" class="page">
+            <h1>Идеи подарков на День Святого Валентина</h1>
+            <p>Выбор подарка для любимого человека - это возможность показать, насколько вы его цените и любите. Вот несколько идей для вдохновения:</p>
+            
+            <div class="gifts-grid">
+                <div class="gift-card">
+                    <div class="gift-image">💝</div>
+                    <div class="gift-content">
+                        <h3>Подарочная корзина</h3>
+                        <p>Соберите корзину с любимыми лакомствами вашей второй половинки, добавив небольшие сувениры и открытку с теплыми словами.</p>
+                    </div>
+                </div>
+                <div class="gift-card">
+                    <div class="gift-image">📸</div>
+                    <div class="gift-content">
+                        <h3>Фотокнига</h3>
+                        <p>Создайте фотокнигу с вашими лучшими совместными фотографиями и памятными моментами.</p>
+                    </div>
+                </div>
+                <div class="gift-card">
+                    <div class="gift-image">🎁</div>
+                    <div class="gift-content">
+                        <h3>Персонализированный подарок</h3>
+                        <p>Подарок с гравировкой, именной надписью или вашими общими фотографиями будет особенно ценным.</p>
+                    </div>
+                </div>
+                <div class="gift-card">
+                    <div class="gift-image">🎨</div>
+                    <div class="gift-content">
+                        <h3>Мастер-класс</h3>
+                        <p>Подарите совместный опыт: кулинарный мастер-класс, урок танцев или творческий воркшоп.</p>
+                    </div>
+                </div>
+                <div class="gift-card">
+                    <div class="gift-image">✈️</div>
+                    <div class="gift-content">
+                        <h3>Путешествие</h3>
+                        <p>Организуйте романтическую поездку в место, о котором вы давно мечтали.</p>
+                    </div>
+                </div>
+                <div class="gift-card">
+                    <div class="gift-image">💌</div>
+                    <div class="gift-content">
+                        <h3>Любовное письмо</h3>
+                        <p>Иногда самые простые и искренние слова могут стать лучшим подарком.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Идеи -->
+        <section id="ideas" class="page">
+            <h1>Идеи для празднования Дня Святого Валентина</h1>
+            <p>Неважно, планируете ли вы грандиозный сюрприз или скромный домашний вечер, главное - провести время вместе и выразить свои чувства.</p>
+            
+            <h2>Романтические идеи для пар</h2>
+            <ul class="ideas-list">
+                <li>
+                    <h3>Домашний ужин при свечах</h3>
+                    <p>Приготовьте любимые блюда вместе, накройте стол, зажгите свечи и создайте особую атмосферу. Можно включить приятную музыку и танцевать.</p>
+                </li>
+                <li>
+                    <h3>Пикник</h3>
+                    <p>Если позволяет погода, организуйте романтический пикник в парке или на природе. Возьмите плед, корзину с едой и наслаждайтесь общением на свежем воздухе.</p>
+                </li>
+                <li>
+                    <h3>Квест с подарками</h3>
+                    <p>Создайте для своей половинки квест с загадками и подсказками, которые приведут к главному подарку или сюрпризу.</p>
+                </li>
+                <li>
+                    <h3>Спа-вечер дома</h3>
+                    <p>Устройте расслабляющий вечер с массажем, масками для лица, ароматическими ваннами и спокойной музыкой.</p>
+                </li>
+                <li>
+                    <h3>Совместное хобби</h3>
+                    <p>Попробуйте что-то новое вместе: рисование, приготовление экзотического блюда, танцы или любое другое занятие, которое вас обоих интересует.</p>
+                </li>
+            </ul>
+            
+            <h2>Идеи для одиноких</h2>
+            <ul class="ideas-list">
+                <li>
+                    <h3>Вечер с друзьями</h3>
+                    <p>Организуйте встречу с друзьями, которые тоже не имеют пары. Можно устроить тематическую вечеринку или просто хорошо провести время вместе.</p>
+                </li>
+                <li>
+                    <h3>Подарок себе</h3>
+                    <p>Побалуйте себя тем, о чем давно мечтали: покупка, спа-процедуры, поход в ресторан или кино.</p>
+                </li>
+                <li>
+                    <h3>Волонтерство</h3>
+                    <p>Поделитесь любовью и заботой с теми, кто в них нуждается. Помощь в приюте для животных или благотворительной организации может принести много радости.</p>
+                </li>
+            </ul>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="social-icons">
+                <a href="https://www.instagram.com/valeriaaalims?igsh=ZzA1NTYyN3MyZ3c1&utm_source=qr"><i class="fab fa-instagram"></i></a>
+                <a href="https://pin.it/6F5KfEg6K"><i class="fab fa-pinterest-p"></i></a>
+            </div>
+            <p>❤️ С Днем Святого Валентина! ❤️</p>
+            <p>Пусть любовь и счастье всегда будут с вами!</p>
+        </div>
+    </footer>
+
+    <script>
+        // Создание анимированных сердец на фоне
+        function createHearts() {
+            const heartsContainer = document.getElementById('heartsBackground');
+            const heartCount = 15;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                
+                // Случайные параметры для сердец
+                const size = Math.random() * 20 + 10;
+                const left = Math.random() * 100;
+                const animationDuration = Math.random() * 20 + 10;
+                const animationDelay = Math.random() * 5;
+                const color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                
+                heart.style.width = `${size}px`;
+                heart.style.height = `${size}px`;
+                heart.style.left = `${left}%`;
+                heart.style.animationDuration = `${animationDuration}s`;
+                heart.style.animationDelay = `${animationDelay}s`;
+                heart.style.background = color;
+                heart.style.setProperty('--primary', color);
+                
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // Навигация между страницами
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetPage = this.getAttribute('data-page');
+                
+                // Удалить активный класс со всех ссылок
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Добавить активный класс к текущей ссылке
+                this.classList.add('active');
+                
+                // Скрыть все страницы
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Показать целевую страницу
+                document.getElementById(targetPage).classList.add('active');
+                
+                // Прокрутка к верху страницы
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Закрыть мобильное меню, если оно открыто
+                if (nav.classList.contains('nav-active')) {
+                    nav.classList.remove('nav-active');
+                    burger.classList.remove('toggle');
+                    document.querySelectorAll('.nav-links li').forEach(link => {
+                        link.style.opacity = '0';
+                    });
+                }
+            });
+        });
+        
+        // Мобильная навигация
+        const burger = document.querySelector('.burger');
+        const nav = document.querySelector('.nav-links');
+        const navLinks = document.querySelectorAll('.nav-links li');
+        
+        burger.addEventListener('click', () => {
+            // Переключение навигации
+            nav.classList.toggle('nav-active');
+            
+            // Анимация ссылок
+            navLinks.forEach((link, index) => {
+                if (link.style.animation) {
+                    link.style.animation = '';
+                } else {
+                    link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
+                }
+            });
+            
+            // Анимация бургера
+            burger.classList.toggle('toggle');
+        });
+        
+        // Инициализация при загрузке страницы
+        window.addEventListener('DOMContentLoaded', () => {
+            createHearts();
+        });
+    </script>
+</body>
+</html>
